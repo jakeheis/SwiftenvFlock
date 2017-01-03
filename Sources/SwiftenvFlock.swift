@@ -1,4 +1,5 @@
 import Flock
+import Foundation
 
 public extension Flock {
     static let Swiftenv: [Task] = [
@@ -44,15 +45,30 @@ class SwiftTask: Task {
            try invoke("swiftenv:install-swiftenv")
        }
 
-        guard let swiftVersion = Config.swiftVersion else {
-            throw TaskError.error("You must specify in your configuration file which Swift version to install.")
-        }
+       let swiftVersion: String
+       let global: Bool
+
+       if let fileVersion = try? String(contentsOfFile: ".swift-version", encoding: .utf8) {
+           let trimmedFileVersion = fileVersion.trimmingCharacters(in: .whitespacesAndNewlines)
+           if let configVersion = Config.swiftVersion, configVersion != trimmedFileVersion {
+               throw TaskError.error("Conflicting Swift versions - Config.swiftVersion = \(configVersion), `.swift-version` = \(trimmedFileVersion)")
+           }
+           swiftVersion = trimmedFileVersion
+           global = false
+       } else if let configVersion = Config.swiftVersion {
+           swiftVersion = configVersion
+           global = true
+       } else {
+           throw TaskError.error("You must specify which Swift version to use either in your configuration file (Config.swiftVersion) or in a `.swift-version` file.")
+       }
 
         if let existingSwifts = try server.capture("swiftenv versions"), !existingSwifts.contains(swiftVersion) {
             try server.execute("swiftenv install \(swiftVersion)")
         }
 
-        try server.execute("swiftenv global \(swiftVersion)")
+        if global {
+            try server.execute("swiftenv global \(swiftVersion)")
+        }
     }
 
 }
