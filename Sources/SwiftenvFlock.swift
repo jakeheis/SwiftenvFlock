@@ -12,14 +12,14 @@ public extension Config {
 }
 
 private let swiftenv = "swiftenv"
-private let location = "~/.swiftenv"
+private let location = "$HOME/.swiftenv"
 
 class SwiftenvInstallationTask: Task {
     let name = "install-swiftenv"
     let namespace = swiftenv
 
     func run(on server: Server) throws {
-        try server.execute("sudo git clone https://github.com/kylef/swiftenv.git \(location)")
+        try server.execute("git clone https://github.com/kylef/swiftenv.git \(location)")
 
         let bashrc = "~/.bashrc"
 
