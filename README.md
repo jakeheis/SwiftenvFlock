@@ -1,2 +1,2 @@
 # SwiftenvFlock
-Integration of Swiftenv into Flock deployments
+Integration of [Swiftenv](https://github.com/kylef/swiftenv) into [Flock](https://github.com/jakeheis/Flock) deployments
