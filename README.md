@@ -28,9 +28,9 @@ flock swiftenv:install-swiftenv    # Invoked by swiftenv:swift if need be
 ```
 `SwiftenvFlock` hooks into the deploy process automatically, so you should never have to call these tasks directly.
 # Configuration
-If you have a `.swift-version` file in your project directory, you should not use this configuration variable.
 ```swift
 public extension Config {
     static var swiftVersion: String? = nil
 }
 ```
+If you have a `.swift-version` file in your project directory, you should not use this configuration variable.
